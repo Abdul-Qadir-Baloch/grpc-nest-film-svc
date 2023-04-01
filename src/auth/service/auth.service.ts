@@ -5,6 +5,8 @@ import { JwtService } from './jwt.service';
 import { RegisterRequestDto, LoginRequestDto, ValidateRequestDto } from '../auth.dto';
 import { Auth } from '../auth.entity';
 import { LoginResponse, RegisterResponse, ValidateResponse } from '../auth.pb';
+import { Logger, stream } from 'winston';
+
 
 @Injectable()
 export class AuthService {
@@ -13,11 +15,13 @@ export class AuthService {
 
   @Inject(JwtService)
   private readonly jwtService: JwtService;
-
+  @Inject('winston')
+  private readonly logger: Logger
   public async register({ email, password }: RegisterRequestDto): Promise<RegisterResponse> {
     let auth: Auth = await this.repository.findOne({ where: { email } });
 
     if (auth) {
+      this.logger.error("",{stream:this.logger.stream})
       return { status: HttpStatus.CONFLICT, error: ['E-Mail already exists'] };
     }
 
@@ -27,6 +31,7 @@ export class AuthService {
     auth.password = this.jwtService.encodePassword(password);
 
     await this.repository.save(auth);
+    this.logger.info(`Success Message and variables: ${email}`);
 
     return { status: HttpStatus.CREATED, error: null };
   }
@@ -52,6 +57,7 @@ export class AuthService {
   public async validate({ token }: ValidateRequestDto): Promise<ValidateResponse> {
     const decoded: Auth = await this.jwtService.verify(token);
 
+
     if (!decoded) {
       return { status: HttpStatus.FORBIDDEN, error: ['Token is invalid'], userId: null };
     }
@@ -61,7 +67,6 @@ export class AuthService {
     if (!auth) {
       return { status: HttpStatus.CONFLICT, error: ['User not found'], userId: null };
     }
-
     return { status: HttpStatus.OK, error: null, userId: decoded.id };
   }
 }

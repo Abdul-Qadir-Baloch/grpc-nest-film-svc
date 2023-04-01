@@ -20,7 +20,7 @@ export class AuthController {
   }
 
   @GrpcMethod(AUTH_SERVICE_NAME, 'Validate')
-  private validate(payload: ValidateRequestDto): Promise<ValidateResponse> {
+  private validate(payload: any): Promise<ValidateResponse> {
     return this.service.validate(payload);
   }
 }

@@ -10,6 +10,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
+    "typeorm": "typeorm-ts-node-esm",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -18,7 +19,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "proto:install": "npm i git+https://github.com/Abdul-Qadir-Baloch/grpc-nest-proto.git"
+    "proto:install": "npm i git+https://github.com/Abdul-Qadir-Baloch/grpc-nest-proto.git",
+    "proto:auth": "protoc --plugin=node_modules/.bin/protoc-gen-ts_proto -I=./node_modules/grpc-nest-proto/proto --ts_proto_out=src/auth/ node_modules/grpc-nest-proto/proto/auth.proto --ts_proto_opt=nestJs=true --ts_proto_opt=fileSuffix=.pb"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.8.13",
@@ -32,19 +34,27 @@
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "faker": "^6.6.6",
+    "fs": "^0.0.1-security",
     "grpc-nest-proto": "github:Abdul-Qadir-Baloch/grpc-nest-proto",
+    "nest-winston": "^1.9.1",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
+    "path": "^0.12.7",
     "pg": "^8.10.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
-    "typeorm": "^0.3.12"
+    "typeorm": "^0.3.12",
+    "typeorm-cli": "^1.0.7",
+    "typeorm-seeding": "^1.6.1",
+    "winston": "^3.8.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
     "@types/express": "^4.17.13",
+    "@types/faker": "^5.5.9",
     "@types/jest": "29.2.4",
     "@types/node": "^18.11.18",
     "@types/passport-jwt": "^3.0.8",
@@ -60,7 +70,7 @@
     "supertest": "^6.1.3",
     "ts-jest": "29.0.3",
     "ts-loader": "^9.2.3",
-    "ts-node": "^10.0.0",
+    "ts-node": "^10.9.1",
     "ts-proto": "^1.143.0",
     "tsconfig-paths": "4.1.1",
     "typescript": "^4.7.4"
